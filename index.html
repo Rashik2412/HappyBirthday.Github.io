@@ -48,6 +48,7 @@
     }
 
     .card {
+      transition: all 0.5s ease;
       position: relative;
       z-index: 2;
       width: 90%;
@@ -63,6 +64,100 @@
     }
 
     @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.92) translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0px);
+      }
+    }
+
+    .fade-out {
+      animation: fadeOut 0.4s ease forwards;
+    }
+
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+        transform: scale(1);
+      }
+      to {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+    }
+
+    .comet {
+      position: absolute;
+      width: 120px;
+      height: 2px;
+      background: linear-gradient(to right, white, transparent);
+      opacity: 0.5;
+      transform: rotate(-25deg);
+      animation: cometMove 8s linear infinite;
+    }
+
+    @keyframes cometMove {
+      0% {
+        top: -10%;
+        left: -20%;
+      }
+      100% {
+        top: 120%;
+        left: 120%;
+      }
+    }
+
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: white;
+      top: -10px;
+      animation: fall 3s linear forwards;
+      z-index: 100;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    .glow {
+      box-shadow: 0 0 25px rgba(255,255,255,0.12);
+    }
+
+    .loading-text {
+      margin-top: 18px;
+      color: #93c5fd;
+      font-size: 0.95rem;
+      min-height: 25px;
+    }
+
+    .music-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      z-index: 10;
+    }
+
+    .music-btn:hover {
+      transform: scale(1.05);
+    }
+
+    /* original fadeIn below */
       from {
         opacity: 0;
         transform: scale(0.9);
@@ -180,6 +275,15 @@
 <body>
 
   <div class="stars" id="stars"></div>
+  <div class="comet"></div>
+
+  <button class="music-btn" onclick="toggleMusic()">
+    🎵 Atmosphere
+  </button>
+
+  <audio id="bgmusic" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=ambient-piano-amp-strings-10711.mp3" type="audio/mpeg">
+  </audio>
 
   <!-- SCREEN 1 -->
   <div class="card" id="screen1">
@@ -195,7 +299,7 @@
       ✨ Warning: dangerous levels of effort detected.
     </div>
 
-    <button class="pink" onclick="nextScreen(1)">
+    <button class="pink glow" onclick="startExperience()">
       Receive Your Gift 🎁
     </button>
   </div>
@@ -210,6 +314,10 @@
     <div class="task">Stabilizing birthday particles ✅</div>
     <div class="task">Preventing chocolate meltdown ✅</div>
     <div class="task pulse">Teleporting gift through screen...</div>
+
+    <div class="loading-text" id="loadingText">
+      Establishing birthday connection...
+    </div>
 
     <button class="blue" onclick="nextScreen(2)">
       Continue ✨
@@ -226,9 +334,10 @@
       Unfortunately, gifts still cannot travel through screens.
     </p>
 
-    <div class="final-box">
+    <div class="final-box glow">
       <p style="font-size: 1.6rem; color: #fef3c7; font-weight: bold;">
         So you'll have to meet me<br>
+        because I still couldn't bend physics enough 😔<br><br>
         to receive yours 🎁
       </p>
     </div>
@@ -240,8 +349,73 @@
 
   <script>
     function nextScreen(current) {
-      document.getElementById('screen' + current).classList.add('hidden');
-      document.getElementById('screen' + (current + 1)).classList.remove('hidden');
+      const currentScreen = document.getElementById('screen' + current);
+      const nextScreenEl = document.getElementById('screen' + (current + 1));
+
+      currentScreen.classList.add('fade-out');
+
+      setTimeout(() => {
+        currentScreen.classList.add('hidden');
+        currentScreen.classList.remove('fade-out');
+        nextScreenEl.classList.remove('hidden');
+      }, 350);
+    }
+
+    function startExperience() {
+      createConfetti();
+      nextScreen(1);
+      fakeLoading();
+    }
+
+    function createConfetti() {
+      for (let i = 0; i < 80; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.background = `hsl(${Math.random() * 360}, 100%, 70%)`;
+        confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+
+        document.body.appendChild(confetti);
+
+        setTimeout(() => {
+          confetti.remove();
+        }, 3000);
+      }
+    }
+
+    function fakeLoading() {
+      const texts = [
+        'Establishing birthday connection...',
+        'Charging celebration particles... 27%',
+        'Emotion levels rising... 52%',
+        'Attempting gift teleportation... 81%',
+        'Physics refusing cooperation... 99%',
+        'Screen delivery failed successfully 😔'
+      ];
+
+      let i = 0;
+      const loadingText = document.getElementById('loadingText');
+
+      const interval = setInterval(() => {
+        i++;
+        if (i >= texts.length) {
+          clearInterval(interval);
+          return;
+        }
+
+        loadingText.innerText = texts[i];
+      }, 900);
+    }
+
+    function toggleMusic() {
+      const music = document.getElementById('bgmusic');
+
+      if (music.paused) {
+        music.play();
+      } else {
+        music.pause();
+      }
     }
 
     const stars = document.getElementById('stars');
