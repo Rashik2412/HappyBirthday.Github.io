@@ -1,172 +1,262 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Gift, Rocket, Sparkles } from "lucide-react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Birthday Delivery</title>
 
-export default function BirthdayWebsite() {
-  const [screen, setScreen] = useState(0);
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-[#060816] via-[#0b1024] to-black overflow-hidden relative text-white flex items-center justify-center px-6 py-10">
-      {/* stars */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(45)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute bg-white rounded-full"
-            style={{
-              width: Math.random() * 3 + 1,
-              height: Math.random() * 3 + 1,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              opacity: [0.2, 1, 0.2],
-              y: [0, -15, 0],
-            }}
-            transition={{
-              duration: Math.random() * 4 + 2,
-              repeat: Infinity,
-            }}
-          />
-        ))}
-      </div>
+    body {
+      background: linear-gradient(to bottom, #050816, #0f172a, #000000);
+      color: white;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
 
-      <AnimatePresence mode="wait">
-        {/* SCREEN 1 */}
-        {screen === 0 && (
-          <motion.div
-            key="screen1"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ duration: 0.5 }}
-            className="relative z-10 max-w-2xl w-full"
-          >
-            <div className="bg-white/10 border border-white/10 backdrop-blur-xl rounded-[2rem] p-10 text-center shadow-2xl">
-              <motion.div
-                animate={{ rotate: [-10, 10, -10] }}
-                transition={{ duration: 3, repeat: Infinity }}
-                className="flex justify-center mb-8"
-              >
-                <Gift size={70} className="text-pink-300" />
-              </motion.div>
+    .stars {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+    }
 
-              <h1 className="text-5xl md:text-6xl font-bold leading-tight">
-                Happy Birthday C 🎉
-              </h1>
+    .star {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 3s infinite;
+    }
 
-              <p className="mt-6 text-slate-300 text-lg leading-relaxed max-w-xl mx-auto">
-                A mysterious birthday delivery has arrived from another corner of the universe.
-              </p>
+    @keyframes twinkle {
+      0% { opacity: 0.2; transform: translateY(0px); }
+      50% { opacity: 1; transform: translateY(-10px); }
+      100% { opacity: 0.2; transform: translateY(0px); }
+    }
 
-              <div className="mt-8 flex items-center justify-center gap-2 text-yellow-200 text-sm">
-                <Sparkles size={16} />
-                <span>Warning: dangerous levels of effort detected.</span>
-              </div>
+    .card {
+      position: relative;
+      z-index: 2;
+      width: 90%;
+      max-width: 700px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(15px);
+      border-radius: 30px;
+      padding: 50px 35px;
+      text-align: center;
+      animation: fadeIn 0.7s ease;
+      box-shadow: 0 0 40px rgba(0,0,0,0.4);
+    }
 
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.96 }}
-                onClick={() => setScreen(1)}
-                className="mt-12 bg-gradient-to-r from-pink-500 to-purple-500 px-8 py-4 rounded-2xl text-lg font-semibold shadow-xl"
-              >
-                Receive Your Gift 🎁
-              </motion.button>
-            </div>
-          </motion.div>
-        )}
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
 
-        {/* SCREEN 2 */}
-        {screen === 1 && (
-          <motion.div
-            key="screen2"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -40 }}
-            transition={{ duration: 0.5 }}
-            className="relative z-10 max-w-2xl w-full"
-          >
-            <div className="bg-white/10 border border-white/10 backdrop-blur-xl rounded-[2rem] p-10 text-center shadow-2xl">
-              <motion.div
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="flex justify-center mb-8"
-              >
-                <Rocket size={70} className="text-cyan-300" />
-              </motion.div>
+    .emoji {
+      font-size: 70px;
+      margin-bottom: 25px;
+      animation: float 3s infinite ease-in-out;
+    }
 
-              <h2 className="text-4xl md:text-5xl font-bold">
-                Preparing Delivery 🚀
-              </h2>
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
 
-              <div className="mt-10 space-y-4 text-left max-w-md mx-auto text-slate-300">
-                <div className="bg-black/30 rounded-xl p-4 border border-white/10">
-                  Packaging emotions ✅
-                </div>
-                <div className="bg-black/30 rounded-xl p-4 border border-white/10">
-                  Stabilizing birthday particles ✅
-                </div>
-                <div className="bg-black/30 rounded-xl p-4 border border-white/10">
-                  Preventing chocolate meltdown ✅
-                </div>
-                <div className="bg-black/30 rounded-xl p-4 border border-white/10 animate-pulse">
-                  Teleporting gift through screen...
-                </div>
-              </div>
+    h1, h2 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
 
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.96 }}
-                onClick={() => setScreen(2)}
-                className="mt-12 bg-gradient-to-r from-cyan-500 to-blue-500 px-8 py-4 rounded-2xl text-lg font-semibold shadow-xl"
-              >
-                Continue ✨
-              </motion.button>
-            </div>
-          </motion.div>
-        )}
+    p {
+      color: #d1d5db;
+      line-height: 1.7;
+      font-size: 1.1rem;
+    }
 
-        {/* SCREEN 3 */}
-        {screen === 2 && (
-          <motion.div
-            key="screen3"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-            className="relative z-10 max-w-2xl w-full"
-          >
-            <div className="bg-white/10 border border-white/10 backdrop-blur-xl rounded-[2rem] p-10 text-center shadow-2xl overflow-hidden relative">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="absolute -top-20 -right-20 opacity-10"
-              >
-                <Gift size={220} />
-              </motion.div>
+    .warning {
+      margin-top: 20px;
+      color: #fde68a;
+      font-size: 0.95rem;
+    }
 
-              <h2 className="text-5xl font-bold text-pink-200">
-                Delivery Failed 😔
-              </h2>
+    button {
+      margin-top: 35px;
+      padding: 16px 30px;
+      border: none;
+      border-radius: 18px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      color: white;
+      transition: 0.3s;
+    }
 
-              <p className="mt-8 text-xl text-slate-300 leading-relaxed">
-                Unfortunately, gifts still cannot travel through screens.
-              </p>
+    button:hover {
+      transform: scale(1.05);
+    }
 
-              <div className="mt-10 bg-black/30 border border-white/10 rounded-3xl p-8">
-                <p className="text-2xl font-semibold leading-relaxed text-yellow-100">
-                  So you'll have to meet me
-                  <br />
-                  to receive yours 🎁
-                </p>
-              </div>
+    .pink {
+      background: linear-gradient(to right, #ec4899, #8b5cf6);
+    }
 
-              <p className="mt-10 text-slate-400 text-sm">
-                This website contains scientifically unnecessary levels of effort.
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+    .blue {
+      background: linear-gradient(to right, #06b6d4, #3b82f6);
+    }
+
+    .task {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 15px;
+      border-radius: 15px;
+      margin-top: 15px;
+      text-align: left;
+    }
+
+    .pulse {
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.5; }
+      50% { opacity: 1; }
+      100% { opacity: 0.5; }
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .final-box {
+      margin-top: 30px;
+      background: rgba(0,0,0,0.35);
+      border-radius: 25px;
+      padding: 30px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .big-gift {
+      position: absolute;
+      top: -20px;
+      right: -10px;
+      font-size: 120px;
+      opacity: 0.08;
+      transform: rotate(15deg);
+    }
+
+    @media (max-width: 700px) {
+      h1, h2 {
+        font-size: 2.2rem;
+      }
+
+      .card {
+        padding: 35px 25px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="stars" id="stars"></div>
+
+  <!-- SCREEN 1 -->
+  <div class="card" id="screen1">
+    <div class="emoji">🎁</div>
+
+    <h1>Happy Birthday C 🎉</h1>
+
+    <p>
+      A mysterious birthday delivery has arrived from another corner of the universe.
+    </p>
+
+    <div class="warning">
+      ✨ Warning: dangerous levels of effort detected.
     </div>
-  );
-}
+
+    <button class="pink" onclick="nextScreen(1)">
+      Receive Your Gift 🎁
+    </button>
+  </div>
+
+  <!-- SCREEN 2 -->
+  <div class="card hidden" id="screen2">
+    <div class="emoji">🚀</div>
+
+    <h2>Preparing Delivery...</h2>
+
+    <div class="task">Packaging emotions ✅</div>
+    <div class="task">Stabilizing birthday particles ✅</div>
+    <div class="task">Preventing chocolate meltdown ✅</div>
+    <div class="task pulse">Teleporting gift through screen...</div>
+
+    <button class="blue" onclick="nextScreen(2)">
+      Continue ✨
+    </button>
+  </div>
+
+  <!-- SCREEN 3 -->
+  <div class="card hidden" id="screen3">
+    <div class="big-gift">🎁</div>
+
+    <h2>Delivery Failed 😔</h2>
+
+    <p>
+      Unfortunately, gifts still cannot travel through screens.
+    </p>
+
+    <div class="final-box">
+      <p style="font-size: 1.6rem; color: #fef3c7; font-weight: bold;">
+        So you'll have to meet me<br>
+        to receive yours 🎁
+      </p>
+    </div>
+
+    <p style="margin-top: 25px; font-size: 0.9rem; color: #9ca3af;">
+      This website contains scientifically unnecessary levels of effort.
+    </p>
+  </div>
+
+  <script>
+    function nextScreen(current) {
+      document.getElementById('screen' + current).classList.add('hidden');
+      document.getElementById('screen' + (current + 1)).classList.remove('hidden');
+    }
+
+    const stars = document.getElementById('stars');
+
+    for (let i = 0; i < 70; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+
+      star.style.top = Math.random() * 100 + '%';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+
+      stars.appendChild(star);
+    }
+  </script>
+
+</body>
+</html>
