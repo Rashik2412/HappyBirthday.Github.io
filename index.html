@@ -14,9 +14,11 @@
     }
 
     body {
+      cursor: none;
       background: linear-gradient(to bottom, #050816, #0f172a, #000000);
       color: white;
       overflow: hidden;
+      position: relative;
       height: 100vh;
       display: flex;
       justify-content: center;
@@ -153,6 +155,67 @@
       z-index: 10;
     }
 
+    .cursor-glow {
+      position: fixed;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      pointer-events: none;
+      z-index: 999;
+      box-shadow: 0 0 25px rgba(255,255,255,0.7);
+      transform: translate(-50%, -50%);
+      transition: transform 0.05s linear;
+    }
+
+    .planet {
+      position: absolute;
+      font-size: 35px;
+      opacity: 0.15;
+      animation: drift 18s infinite linear;
+    }
+
+    @keyframes drift {
+      0% {
+        transform: translateY(0px) translateX(0px);
+      }
+      50% {
+        transform: translateY(-30px) translateX(20px);
+      }
+      100% {
+        transform: translateY(0px) translateX(0px);
+      }
+    }
+
+    .typewriter {
+      overflow: hidden;
+      border-right: 2px solid white;
+      white-space: nowrap;
+      width: 0;
+      animation: typing 3s steps(60, end) forwards, blink 0.8s infinite;
+      margin: auto;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+
+    .tracking {
+      margin-top: 25px;
+      text-align: left;
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 20px;
+      line-height: 2;
+      color: #d1d5db;
+    }
+
     .music-btn:hover {
       transform: scale(1.05);
     }
@@ -169,9 +232,18 @@
     }
 
     .emoji {
+      cursor: pointer;
       font-size: 70px;
       margin-bottom: 25px;
-      animation: float 3s infinite ease-in-out;
+      animation: float 3s infinite ease-in-out, wiggle 2.5s infinite;
+    }
+
+    @keyframes wiggle {
+      0% { transform: rotate(0deg); }
+      25% { transform: rotate(-4deg); }
+      50% { transform: rotate(4deg); }
+      75% { transform: rotate(-2deg); }
+      100% { transform: rotate(0deg); }
     }
 
     @keyframes float {
@@ -275,6 +347,11 @@
 <body>
 
   <div class="stars" id="stars"></div>
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <div class="planet" style="top:10%; left:8%;">🪐</div>
+  <div class="planet" style="top:70%; left:80%; animation-duration:22s;">🌙</div>
+  <div class="planet" style="top:30%; left:85%; animation-duration:15s;">⭐</div>
   <div class="comet"></div>
 
   <button class="music-btn" onclick="toggleMusic()">
@@ -291,7 +368,7 @@
 
     <h1>Happy Birthday C 🎉</h1>
 
-    <p>
+    <p class="typewriter">
       A mysterious birthday delivery has arrived from another corner of the universe.
     </p>
 
@@ -334,6 +411,13 @@
       Unfortunately, gifts still cannot travel through screens.
     </p>
 
+    <div class="tracking">
+      📦 Out for delivery ✅<br>
+      📍 Near recipient ✅<br>
+      🧪 Attempting screen teleportation... ❌<br>
+      ⚠ Failed due to laws of physics
+    </div>
+
     <div class="final-box glow">
       <p style="font-size: 1.6rem; color: #fef3c7; font-weight: bold;">
         So you'll have to meet me<br>
@@ -343,7 +427,8 @@
     </div>
 
     <p style="margin-top: 25px; font-size: 0.9rem; color: #9ca3af;">
-      This website contains scientifically unnecessary levels of effort.
+      This website contains scientifically unnecessary levels of effort.<br><br>
+      Built by a sleep-deprived physics researcher 😭
     </p>
   </div>
 
@@ -407,6 +492,12 @@
         loadingText.innerText = texts[i];
       }, 900);
     }
+
+    document.addEventListener('mousemove', (e) => {
+      const glow = document.getElementById('cursorGlow');
+      glow.style.left = e.clientX + 'px';
+      glow.style.top = e.clientY + 'px';
+    });
 
     function toggleMusic() {
       const music = document.getElementById('bgmusic');
